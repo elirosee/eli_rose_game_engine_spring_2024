@@ -22,15 +22,22 @@ class Game:
         self.start_time = None
         self.countdown_duration = 60
 
-    # load save game data etc...
     def load_data(self):
         game_folder = path.dirname(__file__)
         self.map_data = []
         with open(path.join(game_folder, 'map.txt'), 'rt') as f:
             for line in f:
-                self.map_data.append(line)
-                print(self.map_data)
-                # print(enumerate(self.map_data))
+                self.map_data.append(line.strip())
+                
+    # # load save game data etc...
+    # def load_data(self):
+    #     game_folder = path.dirname(__file__)
+    #     self.map_data = []
+    #     with open(path.join(game_folder, 'map.txt'), 'rt') as f:
+    #         for line in f:
+    #             self.map_data.append(line)
+    #             print(self.map_data)
+    #             # print(enumerate(self.map_data))
  
     def new(self):
         # init all variables, setup groups, instantiate classes
@@ -38,6 +45,14 @@ class Game:
         self.walls = pg.sprite.Group()
         self.power_ups = pg.sprite.Group()
         self.foods = pg.sprite.Group()
+
+        for row, tiles in enumerate(self.map_data):
+            for col, tile in enumerate(tiles):
+                if tile == '1':
+                    Wall(self, col, row)
+                if tile == 'P':
+                    self.player = Player(self, col, row)
+
         # self.player = Player(self, 10, 10)
         # for x in range(10, 20):
         #     Wall(self, x, 5)
