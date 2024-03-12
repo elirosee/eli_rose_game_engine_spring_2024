@@ -21,6 +21,7 @@ class Game:
         self.load_data()
         self.start_time = None
         self.countdown_duration = 60
+
     # load save game data etc...
     def load_data(self):
         game_folder = path.dirname(__file__)
@@ -60,6 +61,8 @@ class Game:
             self.events()
             self.update()
             self.draw()
+            self.update_timer()
+
     def quit(self):
         pg.quit()
         sys.exit()
@@ -68,15 +71,6 @@ class Game:
         self.all_sprites.update()
 
 
-    def run(self):
-        self.playing = True
-        self.start_time=pg.time.get_ticks()
-        while self.playing:
-            self.dt = self.clock.tick(FPS) / 1000
-            self.events()
-            self.update()
-            self.draw()
-            self.update_timer()
     def update_timer(self): 
         if self.start_time is not None:
             elapsed_time = (pg.time.get_ticks() - self.start_time) // 1000
@@ -90,12 +84,12 @@ class Game:
     
 
 
-
     def draw_grid(self):
         for x in range(0, WIDTH, TILESIZE):
             pg.draw.line(self.screen, LIGHTGREY, (x, 0), (x, HEIGHT))
         for y in range(0, WIDTH, TILESIZE):
             pg.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
+    
     def draw(self):
         self.screen.fill(BGCOLOR)
         self.draw_grid()
