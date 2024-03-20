@@ -5,7 +5,11 @@
 import pygame as pg
 from pygame.sprite import Sprite
 from settings import *
+import os 
  
+game_folder = os.path.dirname (__file__)
+img_folder = os.path.join(game_folder, 'characters')
+
 #creating player class
 class Player(pg.sprite.Sprite):
     def __init__(self, game, x, y):
@@ -121,8 +125,8 @@ class Mob(pg.sprite.Sprite):
         self.groups = game.all_sprites, game.mobs
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pg.Surface((TILESIZE, TILESIZE))
-        self.image.fill(RED)
+        self.image = pg.image.load(os.path.join(img_folder, 'ghost smaller.png')).convert()
+        self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect()
         self.rect.x = x * TILESIZE
         self.rect.y = y * TILESIZE
@@ -136,13 +140,13 @@ class Mob(pg.sprite.Sprite):
         self.rect.y += self.vy * self.game.dt
         self.check_collision('y')
 
+# Mob Speed
     def calculate_velocity(self):
-        # Calculate velocities based on player position
         dx = self.game.player.rect.centerx - self.rect.centerx
         dy = self.game.player.rect.centery - self.rect.centery
         dist = max(1, abs(dx) + abs(dy))
-        self.vx = 100 * dx / dist
-        self.vy = 100 * dy / dist
+        self.vx = 50 * dx / dist
+        self.vy = 50 * dy / dist
 
     def check_collision(self, direction):
         if direction == 'x':
