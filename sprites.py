@@ -7,6 +7,7 @@ from pygame.sprite import Sprite
 from settings import *
 import os 
  
+ #Tells game to use the character folder to access the ghost
 game_folder = os.path.dirname (__file__)
 img_folder = os.path.join(game_folder, 'characters')
 
@@ -144,30 +145,51 @@ class Mob(pg.sprite.Sprite):
     def calculate_velocity(self):
         dx = self.game.player.rect.centerx - self.rect.centerx
         dy = self.game.player.rect.centery - self.rect.centery
-        dist = max(1, abs(dx) + abs(dy))
-        self.vx = 50 * dx / dist
-        self.vy = 50 * dy / dist
+        dist = max(500, abs(dx) + abs(dy))
+        self.vx = 250 * dx / dist
+        self.vy = 250 * dy / dist
 
     def check_collision(self, direction):
         if direction == 'x':
             self.rect.x += self.vx * self.game.dt
             hits = pg.sprite.spritecollide(self, self.game.walls, False)
-            for wall in hits:
-                if self.vx > 0:
-                    self.rect.right = wall.rect.left
-                    self.vx *= -1  # Reverse horizontal velocity
-                elif self.vx < 0:
-                    self.rect.left = wall.rect.right
-                    self.vx *= -1  # Reverse horizontal velocity
-                self.rect.x = int(self.rect.x)
-        if direction == 'y':
-            self.rect.y += self.vy * self.game.dt
-            hits = pg.sprite.spritecollide(self, self.game.walls, False)
-            for wall in hits:
-                if self.vy > 0:
-                    self.rect.bottom = wall.rect.top
-                    self.vy *= -1  # Reverse vertical velocity
-                elif self.vy < 0:
-                    self.rect.top = wall.rect.bottom
-                    self.vy *= -1  # Reverse vertical velocity
-                self.rect.y = int(self.rect.y)
+# #Make ghost go through wall
+#             for wall in hits:
+#                 if self.vx > 0:
+#                     self.rect.right = wall.rect.left
+#                     self.vx *= -1  
+#                 elif self.vx < 0:
+#                     self.rect.left = wall.rect.right
+#                     self.vx *= -1  
+#                 self.rect.x = int(self.rect.x)
+#         if direction == 'y':
+#             self.rect.y += self.vy * self.game.dt
+#             hits = pg.sprite.spritecollide(self, self.game.walls, False)
+#             for wall in hits:
+#                 if self.vy > 0:
+#                     self.rect.bottom = wall.rect.top
+#                     self.vy *= -1
+#                 elif self.vy < 0:
+#                     self.rect.top = wall.rect.bottom
+#                     self.vy *= -1  
+#                 self.rect.y = int(self.rect.y)
+
+class Obstacle(pg.sprite.Sprite):
+    def __init__(self, game, x, y):
+        super().__init__()
+        self.groups = game.all_sprites, game.obstacles
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.image = pg.Surface((TILESIZE, TILESIZE))
+        self.image.fill(RED)
+        self.rect = self.image.get_rect()
+        self.rect.x = x * TILESIZE
+        self.rect.y = y * TILESIZE
+        self.speed = 2
+        self.direction = 1  
+
+    def update(self):
+        self.rect.y += self.speed * self.direction
+        if self.rect.bottom > HEIGHT or self.rect.top < 0:
+
+            self.direction *= -1
