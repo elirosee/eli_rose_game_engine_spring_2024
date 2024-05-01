@@ -1,3 +1,10 @@
+# This file was created by: Eli Rose
+#Assistace from Jude Hammers and ChatGPT
+#Design Goals: Make a start and end screen that once you tap a key the game begins. 
+# Design goal= pending, I cant figure out how to make both the start screen have text and have a game after the start screen.
+
+
+
 
 #Game with working start screen but there is no game
 
@@ -435,6 +442,12 @@ class Game:
         self.draw_clock(self.screen, time_left, BLUE, WIDTH // 2, 50, 30)
         pg.display.flip()
 
+    def show_start_screen(self):
+        self.screen.fill(BLACK)
+        self.draw_text(self.screen, "Press any key to begin", 30, WHITE, WIDTH//2, HEIGHT//2)
+        pg.display.flip()
+        self.wait_for_key()
+
     def events(self):
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -446,6 +459,8 @@ class Game:
             print("Time's up! Resetting game...")
             self.new()  # Restart the game
             self.start_time = pg.time.get_ticks()  # Reset the timer
+
+    
 
 
 g = Game()
