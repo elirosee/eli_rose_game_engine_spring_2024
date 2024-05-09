@@ -84,16 +84,33 @@ class Player(pg.sprite.Sprite):
         self.y += self.vy * self.game.dt
         self.rect.x = self.x
         # add collision later
-        self.collide_with_walls('x')
+        # self.collide_with_walls('x')
         self.rect.y = self.y
         # add collision later
-        self.collide_with_walls('y')
+        # self.collide_with_walls('y')
         self.collide_with_group(self.game.coins, True)
  
         # coin_hits = pg.sprite.spritecollide(self.game.coins, True)
         # if coin_hits:
         #     print("I got a coin")
+class Obstacle(pg.sprite.Sprite):
+    def __init__(self, game, x, y):
+        super().__init__()
+        self.groups = game.all_sprites, game.obstacles
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.image = pg.Surface((TILESIZE, TILESIZE))
+        self.image.fill(RED)
+        self.rect = self.image.get_rect()
+        self.rect.x = x * TILESIZE
+        self.rect.y = y * TILESIZE
+        self.speed = 5
+        self.direction = 1  
 
+    def update(self):
+        self.rect.y += self.speed * self.direction
+        if self.rect.bottom > HEIGHT or self.rect.top < 0:
+            self.direction *= -1
  
 class Wall(pg.sprite.Sprite):
     def __init__(self, game, x, y):
@@ -135,24 +152,24 @@ class Mob(pg.sprite.Sprite):
 
     def update(self):
         self.vx, self.vy = 0, 0  # Reset velocities
-        self.calculate_velocity()
+        # self.calculate_velocity()
         self.rect.x += self.vx * self.game.dt
-        self.check_collision('x')
+        # self.check_collision('x')
         self.rect.y += self.vy * self.game.dt
-        self.check_collision('y')
+        # self.check_collision('y')
 
-# Mob Speed
-    def calculate_velocity(self):
-        dx = self.game.player.rect.centerx - self.rect.centerx
-        dy = self.game.player.rect.centery - self.rect.centery
-        dist = max(500, abs(dx) + abs(dy))
-        self.vx = 250 * dx / dist
-        self.vy = 250 * dy / dist
+# # Mob Speed
+#     def calculate_velocity(self):
+#         dx = self.game.player.rect.centerx - self.rect.centerx
+#         dy = self.game.player.rect.centery - self.rect.centery
+#         dist = max(500, abs(dx) + abs(dy))
+#         self.vx = 700 * dx / dist
+#         self.vy = 700 * dy / dist
 
-    def check_collision(self, direction):
-        if direction == 'x':
-            self.rect.x += self.vx * self.game.dt
-            hits = pg.sprite.spritecollide(self, self.game.walls, False)
+#     def check_collision(self, direction):
+#         if direction == 'x':
+#             self.rect.x += self.vx * self.game.dt
+#             hits = pg.sprite.spritecollide(self, self.game.walls, False)
 # #Make ghost go through wall
 #             for wall in hits:
 #                 if self.vx > 0:
@@ -174,22 +191,22 @@ class Mob(pg.sprite.Sprite):
 #                     self.vy *= -1  
 #                 self.rect.y = int(self.rect.y)
 
-class Obstacle(pg.sprite.Sprite):
-    def __init__(self, game, x, y):
-        super().__init__()
-        self.groups = game.all_sprites, game.obstacles
-        pg.sprite.Sprite.__init__(self, self.groups)
-        self.game = game
-        self.image = pg.Surface((TILESIZE, TILESIZE))
-        self.image.fill(RED)
-        self.rect = self.image.get_rect()
-        self.rect.x = x * TILESIZE
-        self.rect.y = y * TILESIZE
-        self.speed = 2
-        self.direction = 1  
+# class Obstacle(pg.sprite.Sprite):
+#     def __init__(self, game, x, y):
+#         super().__init__()
+#         self.groups = game.all_sprites, game.obstacles
+#         pg.sprite.Sprite.__init__(self, self.groups)
+#         self.game = game
+#         self.image = pg.Surface((TILESIZE, TILESIZE))
+#         self.image.fill(RED)
+#         self.rect = self.image.get_rect()
+#         self.rect.x = x * TILESIZE
+#         self.rect.y = y * TILESIZE
+#         self.speed = 2
+#         self.direction = 1  
 
-    def update(self):
-        self.rect.y += self.speed * self.direction
-        if self.rect.bottom > HEIGHT or self.rect.top < 0:
+#     def update(self):
+#         self.rect.y += self.speed * self.direction
+#         if self.rect.bottom > HEIGHT or self.rect.top < 0:
 
-            self.direction *= -1
+#             self.direction *= -1
