@@ -404,7 +404,7 @@ class Game:
     def quit(self):
          pg.quit()
          sys.exit()
-
+# testing
     def update(self):
         self.all_sprites.update()
 
