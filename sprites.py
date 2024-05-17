@@ -154,17 +154,17 @@ class Mob(pg.sprite.Sprite):
         self.vx, self.vy = 0, 0  # Reset velocities
         self.calculate_velocity()
         self.rect.x += self.vx * self.game.dt
-        self.check_collision('x')
+    #     self.check_collision('x')
         self.rect.y += self.vy * self.game.dt
-        self.check_collision('y')
+    #     self.check_collision('y')
 
 # # Mob Speed
     def calculate_velocity(self):
         dx = self.game.player.rect.centerx - self.rect.centerx
         dy = self.game.player.rect.centery - self.rect.centery
-        dist = max(500, abs(dx) + abs(dy))
-        self.vx = 700 * dx / dist
-        self.vy = 700 * dy / dist
+        dist = max(100, abs(dx) + abs(dy))
+        self.vx = 100 * dx / dist
+        self.vy = 100 * dy / dist
 
     def check_collision(self, direction):
         if direction == 'x':
@@ -175,7 +175,7 @@ class Mob(pg.sprite.Sprite):
                 if self.vx > 0:
                     self.rect.right = wall.rect.left
                     self.vx *= -1  
-                elif self.vx < 0:
+                if self.vx < 0:
                     self.rect.left = wall.rect.right
                     self.vx *= -1  
                 self.rect.x = int(self.rect.x)
@@ -210,3 +210,20 @@ class Obstacle(pg.sprite.Sprite):
         if self.rect.bottom > HEIGHT or self.rect.top < 0:
 
             self.direction *= -1
+
+class Portal(pg.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self.groups = game.all_sprites, game.portal
+        pg. sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.image = pg.Surface((TILESIZE, TILESIZE))
+        self.image.fill(MAGENTA)
+        self.rect = self.image.get_rect()
+        self.rect.x = x * TILESIZE
+        self. rect.y = y * TILESIZE
+
+
+
+    # def check_collisions(self):
+    #     if pg.sprite.spritecollideany(self, self.game.portal):
+    #         self.game.nect_level()
